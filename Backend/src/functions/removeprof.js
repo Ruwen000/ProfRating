@@ -1,29 +1,29 @@
 const { app } = require("@azure/functions");
 const { MongoClient } = require("mongodb");
-const { v4: uuidv4 } = require("uuid");
 
 const url = process.env.COSMOS_CONNECTION_STRING;
 
-const client = new MongoClient(url);
+const c = new MongoClient(url);
 
-app.http("get-prof", {
-  methods: ["get"],
+app.http("removeprof", {
+  methods: ["delete"],
   authLevel: "anonymous",
   route: "prof/{id}",
   handler: async (request, context) => {
-
-    await client.connect();
-    const database = client.db("prof");
+    await c.connect();
+    const database = c.db("university");
     const collection = database.collection("collection1");
-    
-    let prof = await collection.findOne({ _id: request.params.id });
+
+    let prof = await collection.deleteOne({ _id: request.params.id });
+
+    let data = await collection.find({}).toArray();
 
     if (!prof) {
-      return { status: 400, body: "cant find prof" };
+      return { status: 400, body: "Can not find Professor to delete" };
     }
 
     return {
-      body: JSON.stringify(prof),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },

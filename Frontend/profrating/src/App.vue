@@ -48,7 +48,7 @@ export default {
           rating: e.rating
         })
         .then(response => {
-          this.listOfEntries = response.data; //TODO: change this, do not return full list
+          this.listOfEntries = response.data;
         });
     },
     removeEntry: function(e) {

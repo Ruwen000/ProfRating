@@ -3,32 +3,34 @@ const { MongoClient } = require("mongodb");
 const { v4: uuidv4 } = require("uuid");
 
 const url = process.env.COSMOS_CONNECTION_STRING;
-const client = new MongoClient(url);
 
-app.http("update-prof", {
-  methods: ["put"],
+const c = new MongoClient(url);
+
+app.http("postprof", {
+  methods: ["POST"],
   authLevel: "anonymous",
-  route: "prof/{id}",
+  route: "prof",
   handler: async (request, context) => {
-    await client.connect();
-    const database = client.db("prof");
+    await c.connect();
+    const database = c.db("university");
     const collection = database.collection("collection1");
-    let req = await request.json()
 
-    let data = { ...req };
-    let query = { _id: request.params.id };
-    let newData = { $set: data };
+    let data = await request.json()
 
-    let update = await collection.findOneAndUpdate(query, newData, {
-      returnOriginal: false,
-    });
+    let newdata = {
+      _id: uuidv4(),
+      name: data.name,
+      rating: data.rating,
+      categoryId: "someValue", 
+    };
+
+    let insert = await collection.insertOne(newdata);
+    if (!insert) {
+      return { status: 400, body: "Adding the prof has failed" };
+    }
 
     let stupidData = await collection.find({}).toArray();
 
-
-    if (!update) {
-      return { status: 400, body: "cant find prof" };
-    }
     return {
       body: JSON.stringify(stupidData),
       headers: {
