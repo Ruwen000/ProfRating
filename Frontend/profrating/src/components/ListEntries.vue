@@ -27,12 +27,12 @@
     methods: {
       removeEntry: function() {
         this.$emit("entryRemoved", {
-          index: this.index
+          index: this.entry._id
         });
       },
       editRating: function() {
         this.$emit("entryEdited", {
-          index: this.index,
+          index: this.entry._id,
           name: this.entry.name,
           rating: this.entry.rating
         });
@@ -41,7 +41,7 @@
         if (this.isEditable) {
           this.isEditable = false;
           this.$emit("entryEdited", {
-            index: this.index,
+            index: this.entry._id,
             name: this.entry.name,
             rating: this.entry.rating
           });

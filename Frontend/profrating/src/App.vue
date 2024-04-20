@@ -33,7 +33,7 @@ export default {
   methods: {
     addEntry: function(e) {
       axios
-        .post("http://localhost:8080/profs/", {
+        .post("https://monodb.azurewebsites.net/api/prof/", {
           name: e.name,
           rating: e.rating
         })
@@ -43,7 +43,7 @@ export default {
     },
     editEntry: function(e) {
       axios
-        .put("http://localhost:8080/profs/" + e.index, {
+        .put("https://monodb.azurewebsites.net/api/prof/" + e.index, {
           name: e.name,
           rating: e.rating
         })
@@ -52,13 +52,13 @@ export default {
         });
     },
     removeEntry: function(e) {
-      axios.delete("http://localhost:8080/profs/" + e.index).then(response => {
+      axios.delete("https://monodb.azurewebsites.net/api/prof/" + e.index).then(response => {
         this.listOfEntries = response.data;
       });
     }
   },
   mounted() {
-    axios.get("http://localhost:8080/profs/").then(response => {
+    axios.get("https://monodb.azurewebsites.net/api/prof/").then(response => {
       this.listOfEntries = response.data;
     });
   }
